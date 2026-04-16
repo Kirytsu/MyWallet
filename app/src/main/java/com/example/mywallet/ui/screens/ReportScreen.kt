@@ -20,6 +20,7 @@ import com.example.mywallet.ui.components.report.DonutReportCard
 import com.example.mywallet.ui.components.report.MonthSelector
 import com.example.mywallet.ui.components.report.ReportCategoryGrid
 import com.example.mywallet.ui.components.report.ReportPeriodSelector
+import com.example.mywallet.ui.components.report.TransactionTypeSelector
 import com.example.mywallet.ui.components.report.WeekFilterInfo
 import com.example.mywallet.ui.components.report.YearSelector
 import com.example.mywallet.ui.theme.MyWalletBlack
@@ -31,6 +32,7 @@ fun ReportScreen() {
     val currentYear = FinanceRepository.currentYear()
     val currentMonth = FinanceRepository.currentMonth()
 
+    var selectedType by remember { mutableStateOf<TransactionType?>(TransactionType.INCOME) }
     var selectedPeriod by remember { mutableStateOf(ReportPeriod.MONTH) }
     var selectedMonth by remember { mutableIntStateOf(currentMonth) }
     var selectedYear by remember { mutableIntStateOf(currentYear) }
@@ -39,7 +41,9 @@ fun ReportScreen() {
         period = selectedPeriod,
         selectedMonth = selectedMonth,
         selectedYear = selectedYear
-    )
+    ).filter { transaction ->
+        selectedType == null || transaction.type == selectedType
+    }
 
     val reportItems = FinanceRepository.reportCategoryItems(filteredTransactions)
     val totalFlow = reportItems.sumOf { it.amount }
@@ -71,6 +75,12 @@ fun ReportScreen() {
                 ),
                 style = MaterialTheme.typography.bodySmall,
                 color = MyWalletTextSecondary
+            )
+        }
+        item {
+            TransactionTypeSelector(
+                selected = selectedType,
+                onSelected = { selectedType = it }
             )
         }
 

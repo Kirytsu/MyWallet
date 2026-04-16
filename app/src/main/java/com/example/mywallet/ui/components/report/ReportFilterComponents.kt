@@ -24,7 +24,10 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.mywallet.model.ReportPeriod
+import com.example.mywallet.model.TransactionType
 import com.example.mywallet.ui.theme.MyWalletBlack
+import com.example.mywallet.ui.theme.MyWalletDanger
+import com.example.mywallet.ui.theme.MyWalletGreen
 import com.example.mywallet.ui.theme.MyWalletTextSecondary
 import com.example.mywallet.ui.utils.monthShortName
 
@@ -60,6 +63,66 @@ fun ReportPeriodSelector(
                 )
             }
         }
+    }
+}
+
+@Composable
+fun TransactionTypeSelector(
+    selected: TransactionType?,
+    onSelected: (TransactionType?) -> Unit
+) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        TypeChip(
+            modifier = Modifier.weight(1f),
+            title = "Pemasukan",
+            isSelected = selected == TransactionType.INCOME,
+            onClick = { 
+                onSelected(if (selected == TransactionType.INCOME) null else TransactionType.INCOME) 
+            },
+            activeColor = MyWalletGreen
+        )
+        TypeChip(
+            modifier = Modifier.weight(1f),
+            title = "Pengeluaran",
+            isSelected = selected == TransactionType.EXPENSE,
+            onClick = { 
+                onSelected(if (selected == TransactionType.EXPENSE) null else TransactionType.EXPENSE) 
+            },
+            activeColor = MyWalletDanger
+        )
+    }
+}
+
+@Composable
+private fun TypeChip(
+    modifier: Modifier = Modifier,
+    title: String,
+    isSelected: Boolean,
+    onClick: () -> Unit,
+    activeColor: Color
+) {
+    Box(
+        modifier = modifier
+            .clip(RoundedCornerShape(12.dp))
+            .background(if (isSelected) activeColor.copy(alpha = 0.12f) else Color.White)
+            .border(
+                width = 1.dp,
+                color = if (isSelected) activeColor else Color(0xFFE4E7EF),
+                shape = RoundedCornerShape(12.dp)
+            )
+            .clickable { onClick() }
+            .padding(vertical = 8.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = title,
+            color = if (isSelected) activeColor else MyWalletTextSecondary,
+            style = MaterialTheme.typography.labelLarge,
+            fontWeight = if (isSelected) FontWeight.SemiBold else FontWeight.Medium
+        )
     }
 }
 

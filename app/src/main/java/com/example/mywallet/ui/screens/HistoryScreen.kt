@@ -46,7 +46,7 @@ fun HistoryScreen() {
                 fontWeight = FontWeight.Bold
             )
             Text(
-                text = "Urut terbaru ke terlama",
+                text = "Terurut dari yang terbaru",
                 style = MaterialTheme.typography.bodySmall,
                 color = MyWalletTextSecondary,
                 modifier = Modifier.padding(top = 2.dp)
